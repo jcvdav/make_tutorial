@@ -1,1 +1,3 @@
-# make_tutorial
+# `MAKE` tutorial
+
+I know, this repo is empty. It won't be for much longer...
