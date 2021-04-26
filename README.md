@@ -43,7 +43,10 @@ Should show something like this (really, anything that is not an error _should_ 
 >PARTICULAR PURPOSE.
 ```
 
-https://stackoverflow.com/questions/32127524/how-to-install-and-use-make-in-windows
+Don't have it? This might help:
+
+- [Mac homebrew formulae](https://formulae.brew.sh/formula/make)
+- [Windows solutions](https://stackoverflow.com/questions/32127524/how-to-install-and-use-make-in-windows)
 
 ### R packages
 
