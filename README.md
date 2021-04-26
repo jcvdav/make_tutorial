@@ -1,5 +1,7 @@
 # `Make` tutorial
 
+> *Don't clone or fork this just yet!* (I'll be making some last-minute changes on the dev-branch. Once this text is gone, you should be ok to clone)
+
 ## What you'll need
 
 There are two options to make sure you have all the dependencies for this project. You can either manually install the following packages:
