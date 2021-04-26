@@ -8,8 +8,10 @@
 ######################################################
 
 # Load packages
-library(here)
-library(tidyverse)
+suppressPackageStartupMessages({
+  library(here)
+  library(tidyverse)
+})
 
 # Read-in data
 raw_fish_data <-
