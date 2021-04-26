@@ -8,11 +8,8 @@ End-to-end reproducibility
 
 - Check that you have `GNU Make` on your device
 - Make sure you have these three packages installed: `here`, `tidyverse`, `modelsummary`
-- DON'T CLONE/FORK UNTL THIS BULLET IS GONE (hopefully by noon PDT on apr 26, 2021)
 
 -------------
-
-> **Don't clone or fork this just yet!** (I'll be making some last-minute changes on the dev-branch. Once this text is gone, you should be ok to clone)
 
 ## The goal
 
