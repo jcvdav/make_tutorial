@@ -6,6 +6,7 @@ End-to-end reproducibility
 
 ## TL; DR
 
+- Clone this repo (make sure to start a new Rproject associated with it)
 - Check that you have `GNU Make` on your device
 - Make sure you have these three packages installed: `here`, `tidyverse`, `modelsummary`
 
@@ -23,6 +24,10 @@ We'll simulate everyone's nightmare:
 The solution to this: one file (`Makefile`) and one command: `Make`
 
 ## What you'll need
+
+### Get the materials
+
+This repository contains everything we'll need for the session. Having `git` installed will make it easier (simply clone this repo). But, if you don't have it yet you can either [follow this other tutorial](https://github.com/eco-data-science/github-intro) or, simply download the entire thing as a compressed folder.
 
 ### Do I have `GNU Make`?
 
@@ -54,7 +59,7 @@ There are two options to make sure you have all the dependencies for this projec
 Simply use the included `renv` environment:
 
 ```
-renv::restore() # Follow the instructions
+renv::restore()                                # Follow the instructions
 ```
 
 OR, manually install them if you don't already have them
