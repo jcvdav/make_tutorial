@@ -8,8 +8,10 @@
 ######################################################
 
 # Load packages
-library(here)
-library(tidyverse)
+suppressPackageStartupMessages({
+  library(here)
+  library(tidyverse)
+})
 
 # Read-in the data
 fish_data <- readRDS(here("data", "clean_fish_data.rds")) %>% 
