@@ -1,12 +1,14 @@
 # `Make` tutorial
 
+End-to-end reproducibility
+
 -------------
 
 ## TL; DR
 
 - Check that you have `GNU Make` on your device
 - Make sure you have these three packages installed: `here`, `tidyverse`, `modelsummary`
-- DON'T CLONE/FORK UNTL THIS BULLET IS GONE
+- DON'T CLONE/FORK UNTL THIS BULLET IS GONE (hopefully by noon PDT on apr 26, 2021)
 
 -------------
 
@@ -14,7 +16,7 @@
 
 ## The goal
 
-We'll simulate everyone's nightmaare:
+We'll simulate everyone's nightmare:
 
 - You have built your "coding pipeline" (see `scripts` and `draft.Rmd`) and are ready to do something with it
 - Then, you (or a colleague) finds an error in the raw data (crisis!!!)
@@ -30,7 +32,7 @@ The solution to this: one file (`Makefile`) and one command: `Make`
 Open a terminal (or use the `Terminal` pane in RStudio) and type:
 
 ```
-make -v #checks version of GNU make
+make -v                                     #checks version of GNU make
 ```
 
 Should show something like this (really, anything that is not an error _should_ work):
@@ -43,7 +45,10 @@ Should show something like this (really, anything that is not an error _should_ 
 >PARTICULAR PURPOSE.
 ```
 
-https://stackoverflow.com/questions/32127524/how-to-install-and-use-make-in-windows
+Don't have it? This might help:
+
+- [Mac homebrew formulae](https://formulae.brew.sh/formula/make)
+- [Windows solutions](https://stackoverflow.com/questions/32127524/how-to-install-and-use-make-in-windows)
 
 ### R packages
 
