@@ -6,43 +6,46 @@ output: ioslides_presentation
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE,
+                      fig.align="center")
 ```
 
 # TOC
 
 - Motivation: the problem
 - Common solutions
-- Relevance
 - GNU Make
 - Work together
 
 ## Disclaimer
 
 >- This is not the solution to all [coding] problems
->- It is merely another tool in your DataScience toolbox (albeit, a useful one!)
+>- It is just another tool in your DataScience toolbox (albeit, a useful one!)
 
 ## Motivation: the problem
 
 >- Coding is rarely linear
 >- We often have to go back and change data, assumptions, transformations, filters, colors, font types
->- Projects can get really big really fast... and re-running an entire Rmd file is not an option (well, kinda)
+>- Projects can get really big really fast... and re-running an huge Rmd file is not an option
 >- We rarely work alone (new data, new approaches, new questions...)
 
 ## Motivation: an example
 
 We'll simulate everyone's nightmare:
 
->- You have built your "coding pipeline" and are ready to do something with it
+>- You have built your "coding pipeline" and are ready to share results
 >- Then, you (or a colleague) finds an error in the raw data (crisis!!!)
 >- You fix the error, and now have to rerun the ENTIRE analysis. Chaos:
   >- _which script did what, again?_
   >- _What depended on what?_
->- By the time you are done figuring this out, you've also gotten your hands on more data so... gotta re-run everything again
+
+>- Yes, organization solves a lot of this (but who's got time for that?)
 
 # [Self-]Motivation:
 
-> ~~The solution lies in the problem~~ -> The problem lies in the solution
+> ~~The solution lies in the problem~~
+
+> The problem lies in the solution to the original problem
 
 # {data-background="motivation.png"}
 
@@ -57,6 +60,10 @@ scripts
     |_plot_data.R
 results
     |_figure1.png
+```
+
+```{r, echo = F, out.width="50%", fig.align="center"}
+knitr::include_graphics("test_workflow.png")
 ```
 
 ## A potential solution: `lapply`
@@ -79,11 +86,11 @@ scripts <- list.files(path = "scripts",
                       pattern = "*.R")
 
 # Run them all... in parallel
-plan(multisession, workers = 4) # Use for cores
+plan(multisession, workers = 4) # Use four cores
 future_walk(scripts, source)    # Walk through files
 ```
 
-```{r, out.width="40%", echo = F, fig.align="center"}
+```{r, out.width="35%", echo = F, fig.align="center"}
 knitr::include_graphics("doge.png")
 ```
 
@@ -144,13 +151,53 @@ knitr::include_graphics("changes.png")
 
 ## Overview of `make` and `Makefile`
 
+From [`GNU`'s website](https://www.gnu.org/software/make/):
+
+>"GNU Make is a **tool** which **controls the generation** of executables and other non-source files of a program from the program's **source files.**"
+
 ## How does it work?
 
-## Targets and prerequisites
+>- `make` "looks" for a file called `Makefile`
+- You write that `Makefile`, listing all the good stuff
+- What's _"the good stuff"_?
 
-# Quick example
+## The good stuff:
 
-## Recall our previous case:
+>- _Targets_: What needs to be created
+- _Prerequisites_: The dependencies
+- _Commands_: How do we go from dependency to target?
+- Together, these make a _rule_
+- We specify them as:
+
+## Three things to keep in mind:
+
+- _Targets_: What needs to be created
+- _Prerequisites_: The dependencies
+- _Commands_: How do we go from dependency to target?
+- Together, these make a _rule_
+- We specify them as:
+
+```{bash, eval = F}
+target: prerequisite
+  command
+```
+
+>- Note on notation, indentation...
+
+## A lame example
+
+```{bash, eval = F}
+taco: recipe fridge/tortilla fridge/meat fridge/salsa
+  follow recipe
+  
+happiness: taco           #A target can be a prerequisite
+  eat taco
+```
+
+
+# Short example
+
+## Remember our previous case?
 
 ```{bash, eval = F}
 data
@@ -163,12 +210,23 @@ results
     |_figure1.png
 ```
 
-## The `Makefile` would simply be:
+
+```{r, echo = F, out.width="50%", fig.align="center"}
+knitr::include_graphics("test_workflow.png")
+```
+
+## What's the `Makefile` for this project?
+
+### Recall:
 
 ```{bash, eval = F}
 target: prerequisites
-  how do I build them?
+  command
+```
 
+### So, then:
+
+```{bash, eval = F}
 results/figure1.png: scripts/plot_data.R data/clean_data.csv
   Rscript scripts/plot_data.R
 
@@ -178,8 +236,115 @@ data/clean_data.csv: scripts/clean_data.R data/raw_data.csv
 
 And one command does it all: `make`
 
+# Cool things
 
-## Today's project
+## Making it into a graph
+
+For this, we need [graphviz](https://www.graphviz.org/) and [makefile2graph](https://github.com/lindenb/makefile2graph.git)
+
+```{bash, eval = F}
+make -Bnd | make2graph | dot -Tpng -o makefile-dag.png
+```
+
+>- `-Bnd` tells `make` to "`B`: Unconditionally make all targets, `n`: just print, `d`: print debug info"
+- `|` is just the OG pipe
+- `-Tpng` tells `dot` "`T` use the following output format: `png`"
+
+## Making it into a graph
+
+```{bash, eval = F}
+make -Bnd | make2graph | dot -Tpng -o makefile-dag.png
+```
+
+```{r, echo = F, out.width="100%"}
+knitr::include_graphics("test_workflow.png")
+```
+
+
+## Automatic variables
+
+- `$@`: the file name of the target
+- `$<`: the name of the first prerequisite
+- `$^`: the names of all prerequisites
+- `$(@D)`: the directory part of the target
+- `$(@F)`: the file part of the target
+- `$(<D)`: the directory part of the first prerequisite
+- `$(<F)`: the file part of the first prerequisite
+
+## Automatic variables
+
+### Let's use two: `$(<D)` and `$(<F)`
+
+```{bash, eval = F}
+results/figure1.png: scripts/plot_data.R data/clean_data.csv
+  Rscript scripts/plot_data.R
+```
+
+Can be written as
+
+```{bash, eval = F}
+results/figure1.png: scripts/plot_data.R data/clean_data.csv
+  cd $(<D);Rscript $(<F)
+```
+
+## Pattern rules
+
+Imagine you have something like this:
+
+```{bash, eval = F}
+results/figure1.png: scripts/figure1.R
+  Rscript scripts/figure1.R
+
+results/figure2.png: scripts/figure2.R
+  Rscript scripts/figure2.R
+
+results/figure3.png: scripts/figure3.R
+  Rscript scripts/figure3.R
+
+results/figure4.png: scripts/figure4.R
+  Rscript scripts/figure4.R
+
+results/figure5.png: scripts/figure5.R
+  Rscript scripts/figure5.R
+.
+.
+.
+.
+.
+.
+```
+
+## Pattern rules
+
+Writing out this chunk $n$ times presents opportunity for $\alpha n$ errors:
+
+```{bash, eval = F}
+results/figure1.png: scripts/figure1.R
+  cd $(<D);Rscript $(<F)
+```
+
+Instead, we use pattern rules with `%`, which is equivalent to `*`
+
+```{bash, eval = F}
+results/%.png: scripts/%.R
+    cd $(<D);Rscript $(<F)
+```
+
+(I think it's cool that the workflow induces standardization)
+
+## Environmental variables
+
+You can include them:
+
+```{bash, eval = F}
+R_OPTS=--no-save --no-restore --no-init-file --no-site-file
+
+results/%.png: scripts/%.R
+    cd $(<D);Rscript $(R_OPTS) $(<F)
+```
+
+
+# Hands-on
 
 ```{r, out.width="90%", fig.align="center", echo = F}
 knitr::include_graphics("../workflow.png")
@@ -189,15 +354,32 @@ The repo is here: [https://github.com/jcvdav/make_tutorial](https://github.com/j
 
 ## Today's project
 
-Walk you around the repo and set things up
+```{bash, eval = F}
+draft.Rmd
+draft.html
+scripts
+  |_00_clean_data.R
+  |_01_figure_1.R
+  |_02_figure_2.R
+  |_03_regression.R
+results
+  |_img
+  |  |_ first_year.png
+  |  |_ time_sereies.png
+  |_tab
+     |_ reg_table.html
+```
 
-Goals:
 
->- Show you how to `make` your project
-- Simulate getting a "fixed" version of the data and re-`make`ing the project
-- Simulate getting NEW (or more?) data and re-`make`int the project once again
-- Finally, create you own code and add a pair of target / prerequisites
+## Today's project
+
+>- `make` the project
+- Simulate getting a "fixed" version of the data and re-`make`ing the project _(end-to-end update)_
+- Simulate making one change _(partial update)_
+- Simulate getting NEW (or more?) data and re-`make`int the project once again _(end-to-end update)_
+- Finally, create you own code and add a pair of target / prerequisites _(partial update)_
 - If we have time, we'll generalize some of the code (less typing!)
+- If we have time, we'll automate the generation of the workflow image
 
 ## Other resources
 
@@ -205,6 +387,8 @@ Goals:
 - [There is an `R` in `R`eproducibility](https://towardsdatascience.com/there-is-an-r-in-reproducibility-b9120712742f)
 - [Great example from simple to complex with GNU](https://kbroman.org/minimal_make/)
 - [GNU Make documentation](https://www.gnu.org/software/make/)
+- [Cool short example of makefile2graph and graphviz](https://gist.github.com/carlislerainey/9a1e49cb195076165a4f07a683ce05a7)
+
 
 
 
