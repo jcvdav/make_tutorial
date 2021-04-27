@@ -1,0 +1,231 @@
+---
+title: "GNU `make` and `Makefile` for rerpoducibility"
+author: "Juan Carlos Villaseñor-Derbez"
+date: "4/27/2021"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# TOC
+
+- Motivation: the problem
+- Common solutions
+- Relevance
+- GNU Make
+- Work together
+
+## Disclaimer
+
+>- This is not the solution to all [coding] problems
+>- It is merely another tool in your DataScience toolbox (albeit, a useful one!)
+
+## Motivation: the problem
+
+>- Coding is rarely linear
+>- We often have to go back and change data, assumptions, transformations, filters, colors, font types
+>- Projects can get really big really fast... and re-running an entire Rmd file is not an option (well, kinda)
+>- We rarely work alone (new data, new approaches, new questions...)
+
+## Motivation: an example
+
+We'll simulate everyone's nightmare:
+
+>- You have built your "coding pipeline" and are ready to do something with it
+>- Then, you (or a colleague) finds an error in the raw data (crisis!!!)
+>- You fix the error, and now have to rerun the ENTIRE analysis. Chaos:
+  >- _which script did what, again?_
+  >- _What depended on what?_
+>- By the time you are done figuring this out, you've also gotten your hands on more data so... gotta re-run everything again
+
+# [Self-]Motivation:
+
+> ~~The solution lies in the problem~~ -> The problem lies in the solution
+
+# {data-background="motivation.png"}
+
+## Consider a case
+
+```{bash, eval = F}
+data
+    |_raw_data.csv
+    |_clean_data.csv
+scripts
+    |_clean_data.R
+    |_plot_data.R
+results
+    |_figure1.png
+```
+
+## A potential solution: `lapply`
+
+```{r, eval = F}
+# Identify all scripts
+scripts <- list.files(path = "scripts",
+                      pattern = "*.R")
+
+# Run them all
+lapply(scripts, source)
+```
+
+
+## A potential solution: `purrr` + `furrr`
+
+```{r, eval = F}
+# Identify all scripts
+scripts <- list.files(path = "scripts",
+                      pattern = "*.R")
+
+# Run them all... in parallel
+plan(multisession, workers = 4) # Use for cores
+future_walk(scripts, source)    # Walk through files
+```
+
+```{r, out.width="40%", echo = F, fig.align="center"}
+knitr::include_graphics("doge.png")
+```
+
+## A potential solution: `run_all.R`
+
+Have a script:
+
+```{r, eval = F}
+# Run all scripts
+# This script runs all the code in my project, from scratch
+source("scripts/clean_data.R")      # To clean the data
+source("scripts/plot_data.R")       # To plot the data
+```
+
+And either call `source(run_all.R)` or manually source the ones that we *think* we need to run.
+
+## Problems with these
+
+- Do I even need to actually run all?
+
+- What if variables / values are left in my environment?
+
+- It worked when I wrote it, but not anymore
+
+- What if the timing isn't correct?
+
+## Existing solutions
+
+### Many R packages
+
+>- [drake](https://books.ropensci.org/drake/)
+
+>- [targets](https://docs.ropensci.org/targets/)
+
+>- Many, many, many other great solutions...
+
+## Existing solutions
+
+### But some shortcommings
+
+>- R-specific (hinders collaboration)
+>- Things keep changing (for better, but still)
+
+## Existing solutions
+
+### But some shortcommings
+
+- R-specific (hinders collaboration)
+- Things keep changing (for better, but still)
+
+```{r, echo = F}
+knitr::include_graphics("changes.png")
+```
+
+>- They really are just leveraging an existing infrastructure
+
+# Enter `make`
+
+## Overview of `make` and `Makefile`
+
+## How does it work?
+
+## Targets and prerequisites
+
+# Quick example
+
+## Recall our previous case:
+
+```{bash, eval = F}
+data
+    |_raw_data.csv
+    |_clean_data.csv
+scripts
+    |_clean_data.R
+    |_plot_data.R
+results
+    |_figure1.png
+```
+
+## The `Makefile` would simply be:
+
+```{bash, eval = F}
+target: prerequisites
+  how do I build them?
+
+results/figure1.png: scripts/plot_data.R data/clean_data.csv
+  Rscript scripts/plot_data.R
+
+data/clean_data.csv: scripts/clean_data.R data/raw_data.csv
+  Rscript scripts/clean_data.R
+```
+
+And one command does it all: `make`
+
+
+## Today's project
+
+```{r, out.width="90%", fig.align="center", echo = F}
+knitr::include_graphics("../workflow.png")
+```
+
+The repo is here: [https://github.com/jcvdav/make_tutorial](https://github.com/jcvdav/make_tutorial)
+
+## Today's project
+
+Walk you around the repo and set things up
+
+Goals:
+
+>- Show you how to `make` your project
+- Simulate getting a "fixed" version of the data and re-`make`ing the project
+- Simulate getting NEW (or more?) data and re-`make`int the project once again
+- Finally, create you own code and add a pair of target / prerequisites
+- If we have time, we'll generalize some of the code (less typing!)
+
+## Other resources
+
+- [Miles McBain "That feeling of workflowing" video lecture](https://youtu.be/jU1Zv21GvT4)
+- [There is an `R` in `R`eproducibility](https://towardsdatascience.com/there-is-an-r-in-reproducibility-b9120712742f)
+- [Great example from simple to complex with GNU](https://kbroman.org/minimal_make/)
+- [GNU Make documentation](https://www.gnu.org/software/make/)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

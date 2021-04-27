@@ -22,7 +22,7 @@ raw_fish_data <-
 # Clean the data
 clean_fish_data <- raw_fish_data %>% 
   arrange(year, transect, fish) %>%                                        # Arrange by year, transect, and species
-  mutate(fish = str_remove_all(fish, "fish"))                              # Remove all mentions of "fish"
+  mutate(fish = str_remove_all(fish, " fish"))                              # Remove all mentions of "fish"
 
 
 # Export the clean data
