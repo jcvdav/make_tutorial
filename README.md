@@ -29,7 +29,7 @@ The solution to this: one file (`Makefile`) and one command: `Make`
 
 This repository contains everything we'll need for the session. Having `git` installed will make it easier (simply clone this repo). But, if you don't have it yet you can either [follow this other tutorial](https://github.com/eco-data-science/github-intro) or, simply download the entire thing as a compressed folder.
 
-### Do I have `GNU Make`?
+### Do I have `GNU make`?
 
 Open a terminal (or use the `Terminal` pane in RStudio) and type:
 
@@ -70,14 +70,24 @@ pkgs <- c("tidyverse", "here", "modelsummary") # List of packages needed
 lapply(pkgs, install.packages)                 # Install all packages
 ```
 
+### Optional dependencies
+
+- [makefile2graph](https://github.com/lindenb/makefile2graph.git) To convert your makefile into a graph
+- [graphviz](https://www.graphviz.org/) To visualize that graph
+
+To install both, follow the instructions [here](https://gist.github.com/carlislerainey/9a1e49cb195076165a4f07a683ce05a7#setting-up)
+
 ## Other resources
 
 ### General
 
-- [Great example from simple to complex](https://kbroman.org/minimal_make/)
 - [GNU Make documentation](https://www.gnu.org/software/make/)
+- [Great example from simple to complex](https://kbroman.org/minimal_make/)
+- [Cool short example of makefile2graph and graphviz](https://gist.github.com/carlislerainey/9a1e49cb195076165a4f07a683ce05a7)
 
 ### R-specific:
 
 - [drake](https://github.com/ropensci/drake)
-- [makeR]()
+- [targets](https://docs.ropensci.org/targets/)
+- [There is an `R` in `R`eproducibility](https://towardsdatascience.com/there-is-an-r-in-reproducibility-b9120712742f)
+
