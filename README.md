@@ -88,4 +88,6 @@ To install both, follow the instructions [here](https://gist.github.com/carlisle
 ### R-specific:
 
 - [drake](https://github.com/ropensci/drake)
-- [makeR]()
+- [targets](https://docs.ropensci.org/targets/)
+- [There is an `R` in `R`eproducibility](https://towardsdatascience.com/there-is-an-r-in-reproducibility-b9120712742f)
+
