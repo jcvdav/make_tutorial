@@ -1,7 +1,7 @@
 ---
 title: "GNU `make` and `Makefile` for rerpoducibility"
 author: "Juan Carlos Villaseñor-Derbez"
-date: "4/27/2021"
+date: ""
 format:
   revealjs:
     fig-align: center
